@@ -11,9 +11,13 @@ public class Frase {
     private Long id;
 
     private String titulo;
+
     private String frase;
+
     private String personagem;
+
     private String poster;
+
 
     public Long getId() {
         return id;
