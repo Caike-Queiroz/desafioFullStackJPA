@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./frontend/3356-java-desafio-front
+      dockerfile: Dockerfile
+    container_name: frontend-frases
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: ./backend/DesafioFullStackJPA
+      dockerfile: Dockerfile
+    container_name: backend-frases
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/series/frases"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: bitnami/postgresql:latest
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: screenmatch_frases
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Root2025@$
+    volumes:
+      - pgdata:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
