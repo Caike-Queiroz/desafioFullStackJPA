@@ -18,7 +18,6 @@ public class Frase {
 
     private String poster;
 
-
     public Long getId() {
         return id;
     }
